@@ -3,30 +3,55 @@ const fs = require("fs");
 // Path to your JSON file
 const filePath = "data.json";
 
-const get = () => {
-    fs.readFile(filePath, "utf8", (err, data) => {
-        if (err) {
-            console.error("Error reading file:", err);
-            return;
-        }
+const get = (callback) => {
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      console.error("Error reading file:", err);
+      callback(err);
+      return;
+    }
+    try {
+      const jsonData = JSON.parse(data);
+    //   console.log("Data from file:", jsonData);
+      callback(null, jsonData);
+    } catch (error) {
+      console.error("Error parsing JSON:", error);
+      callback(error);
+    }
+  });
+};
 
-        try {
-            // Parse the JSON data
-            const jsonData = JSON.parse(data);
+const set = (newEntry, callback) => {
+  get((err, data) => {
+    if (err) {
+      callback(err);
+      return;
+    }
+     if (!Array.isArray(data)) {
+       data = [];
+     }
 
-            // Now you can use the jsonData object which contains your data
-            return data;
-        } catch (error) {
-            console.error("Error parsing JSON:", error);
-        }
+    // Check if the name already exists
+   const existingEntry = data.find((entry) => entry.name === newEntry.name);
+   if (existingEntry) {
+     callback(null, { error: "Name already exists" });
+     return;
+   }
+    data.push(newEntry);
+
+    // Write the updated data back to the file
+    fs.writeFile(filePath, JSON.stringify(data, null, 2), (err) => {
+      if (err) {
+        console.error("Error writing file:", err);
+        callback(err);
+        return;
+      }
+      console.log("New entry added successfully!");
+      callback(null, newEntry);
     });
+  });
 };
 
-const set = (newEntriee) => {
-    console.log("runing a post call and the new entriee is : ", newEntriee);
-    phoneBookEntries.push(newEntriee);
-    return newEntriee;
-};
 
 module.exports = {
     get,

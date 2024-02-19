@@ -8,15 +8,26 @@ app.use(express.json());
 // Define a GET route to fetch all phone book entries
 app.get("/api/phonebook", (req, res) => {
     console.log("Get method called");
-    res.json(get());
+    get((err, data) => {
+      if (err) {
+        res.status(500).json({ error: "Internal Server Error" });
+        return;
+      }
+      res.json(data);
+    });
 });
 
 // Define a post route for posting a phone Book entrie
 app.post("/api/phonebook", (req, res) => {
-    const body = req.body;
-    console.log(body);
-    // res.json(get());
-    res.json(set(req.body))
+  console.log("POST method called");
+  const newEntry = req.body;
+  set(newEntry, (err, data) => {
+    if (err) {
+      res.status(500).json({ error: "Internal Server Error" });
+      return;
+    }
+    res.status(201).json(data);
+  });
 });
 
 // Start the server
