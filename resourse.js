@@ -32,9 +32,9 @@ const set = (newEntry, callback) => {
      }
 
     // Check if the name already exists
-   const existingEntry = data.find((entry) => entry.name === newEntry.name);
+   const existingEntry = data.find((entry) => entry.phone === newEntry.phone);
    if (existingEntry) {
-     callback(null, { error: "Name already exists" });
+     callback( "Phone no already exists" );
      return;
    }
     data.push(newEntry);

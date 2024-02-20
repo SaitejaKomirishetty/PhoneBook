@@ -23,7 +23,7 @@ app.post("/api/phonebook", (req, res) => {
   const newEntry = req.body;
   set(newEntry, (err, data) => {
     if (err) {
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json({ error: err });
       return;
     }
     res.status(201).json(data);
