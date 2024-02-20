@@ -21,6 +21,22 @@ const get = (callback) => {
   });
 };
 
+const search = (query, callback) => {
+  get((err, data) => {
+    if (err) {
+      callback(err);
+      return;
+    }
+     if (!Array.isArray(data)) {
+       data = [];
+     }
+     const searchResults = data.filter((item) =>
+         item.name.toLowerCase().includes(query.toLowerCase())
+     );
+    callback(null, searchResults);
+  })
+}
+
 const set = (newEntry, callback) => {
   get((err, data) => {
     if (err) {
@@ -53,7 +69,9 @@ const set = (newEntry, callback) => {
 };
 
 
+
 module.exports = {
     get,
     set,
+    search,
 };

@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const { get, set } = require("./resourse");
+const { get, set,search } = require("./resourse");
 
 app.use(express.json());
 
@@ -17,6 +17,18 @@ app.get("/api/phonebook", (req, res) => {
     });
 });
 
+app.get("/api/phonebook/search",((req,res) => {
+  console.log("Get methood called for searching");
+  const query = req.query.search;
+  search(query,(err,data)=>{
+    if(err){
+      res.status(500).json({error: "Error occured"});
+      return;
+    }
+    console.log("===>",data);
+    res.json(data);
+  })
+}))
 // Define a post route for posting a phone Book entrie
 app.post("/api/phonebook", (req, res) => {
   console.log("POST method called");
